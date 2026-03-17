@@ -16,18 +16,6 @@ Understanding how keyloggers work is a fundamental skill for:
 
 ---
 
-## 🧠 What You'll Learn
-
-| Concept | How This Project Teaches It |
-|---|---|
-| Keystroke interception | `pynput` listener hooks into OS-level input events |
-| Buffer management | Keystrokes batch before writing to reduce I/O overhead |
-| Threading | Auto-save runs on a background thread without blocking input |
-| Log forensics | `analyze_log.py` parses and visualizes captured data |
-| Defensive awareness | Seeing how easy capture is motivates better endpoint security |
-
----
-
 ## 📁 Project Structure
 
 ```
