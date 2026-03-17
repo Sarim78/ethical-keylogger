@@ -1,0 +1,16 @@
+# Logs — never commit captured keystrokes
+logs/
+*.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+env/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
