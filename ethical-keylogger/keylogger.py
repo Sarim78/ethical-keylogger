@@ -17,7 +17,7 @@ import os
 import sys
 import time
 import threading
-import platformpi
+import platform
 from datetime import datetime
 from pynput import keyboard
 
