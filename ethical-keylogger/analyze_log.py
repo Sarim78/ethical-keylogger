@@ -1,87 +1,36 @@
-"""
-analyze_log.py
-==============
-Parses and analyzes the keylogger output log.
-Generates keystroke statistics and a frequency report.
-"""
-
-import os
-import re
 from collections import Counter
+import re
 
-LOG_FILE = os.path.join("logs", "keylog.txt")
+LOG_FILE = "log.txt"
 
-
-def load_log(path):
-    if not os.path.exists(path):
-        print(f"[ERROR] Log file not found: {path}")
-        return ""
-    with open(path, "r", encoding="utf-8") as f:
+def load_log():
+    """Read the log file and return its contents as a string."""
+    with open(LOG_FILE, "r") as f:
         return f.read()
 
+def count_characters(text):
+    """Count how many times each regular character appears."""
+    # Strip out anything in [brackets] like [enter], [backspace]
+    clean = re.sub(r"\[.*?\]", "", text)
+    return Counter(clean)
 
-def extract_keystrokes(raw):
-    """Separate regular characters from special key tags."""
-    special_keys = re.findall(r"\[([A-Z_↑↓←→]+)\]", raw)
-    clean_text = re.sub(r"\[.*?\]", "", raw)
-    return clean_text, special_keys
-
-
-def char_frequency(text):
-    """Return character frequency excluding whitespace and header lines."""
-    filtered = [c for c in text if c.strip() and c.isalpha()]
-    return Counter(filtered)
-
-
-def word_frequency(text):
-    """Split cleaned text into words and count frequency."""
-    words = re.findall(r"[a-zA-Z]{2,}", text)
+def count_words(text):
+    """Extract and count all words from the log."""
+    clean = re.sub(r"\[.*?\]", " ", text)
+    words = re.findall(r"[a-zA-Z]+", clean)
     return Counter(words)
 
+# Run the report 
+text = load_log()
 
-def print_report(raw):
-    clean_text, special_keys = extract_keystrokes(raw)
+char_counts = count_characters(text)
+word_counts = count_words(text)
 
-    total_chars = len(clean_text.replace("\n", "").replace(" ", ""))
-    total_special = len(special_keys)
-    total_keystrokes = total_chars + total_special
+print(f"Total characters typed: {sum(char_counts.values())}")
+print("\nTop 10 keys:")
+for char, count in char_counts.most_common(10):
+    print(f"  '{char}' — {count} times")
 
-    char_freq = char_frequency(clean_text)
-    word_freq = word_frequency(clean_text)
-    special_freq = Counter(special_keys)
-
-    print("\n" + "="*55)
-    print("   KEYSTROKE ANALYSIS REPORT")
-    print("="*55)
-    print(f"  Total keystrokes logged  : {total_keystrokes}")
-    print(f"  Printable characters     : {total_chars}")
-    print(f"  Special key presses      : {total_special}")
-
-    print("\n─── Top 10 Characters ───────────────────────────────")
-    for char, count in char_freq.most_common(10):
-        bar = "█" * min(count, 40)
-        print(f"  '{char}'  {bar} ({count})")
-
-    print("\n─── Top 10 Words Typed ──────────────────────────────")
-    for word, count in word_freq.most_common(10):
-        print(f"  {word:<20} {count} times")
-
-    print("\n─── Special Key Breakdown ───────────────────────────")
-    for key, count in special_freq.most_common():
-        print(f"  [{key}]{'.'*(25-len(key))} {count} times")
-
-    print("\n─── Captured Text Preview (first 300 chars) ─────────")
-    preview = clean_text.strip()[:300].replace("\n", " ")
-    print(f"  {preview}...")
-    print("="*55 + "\n")
-
-
-def main():
-    print("\n[*] Loading log file...")
-    raw = load_log(LOG_FILE)
-    if raw:
-        print_report(raw)
-
-
-if __name__ == "__main__":
-    main()
+print("\nTop 10 words:")
+for word, count in word_counts.most_common(10):
+    print(f"  '{word}' — {count} times")
