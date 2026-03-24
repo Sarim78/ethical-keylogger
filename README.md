@@ -1,6 +1,6 @@
 # 🔐 Ethical Keylogger
 
-> **Educational use only — local machine, explicit consent required.**  
+> **Educational use only and local machine, explicit consent required.**  
 > A Python-based keystroke logger built to understand how malware captures input, designed for cybersecurity learning.
 
 ---
